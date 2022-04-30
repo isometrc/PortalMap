@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+	<head>	
+		<script type="text/javascript" src="/js/jquery.js"></script>
+		<script type="text/javascript" src="/js/raphael.js"></script>
+		<script type="text/javascript" src="/js/dracula.min.js"></script>
+		<script>
+			var zones = new Array();
+
+			function getZones() {
+				$.ajax({
+					url: "/getzones",
+					type: "GET",
+					dataType: 'json',
+					success: function(result) {
+						zones = result;
+						console.log("got result");
+						console.log(result);
+						redrawGraph();
+					}
+				});
+			}
+
+			function redrawGraph() {
+				var _canvas = document.getElementById("canvas");
+				var _g = new Dracula.Graph();
+					
+				for(let _i = 0; _i < zones.length; _i++) {
+					let _zone = zones[_i];
+
+					// Make edge labels
+					let _conn1Label = _zone.conn1Time + "\n" + _zone.conn1Size + " people";
+					let _conn2Label = _zone.conn2Time + "\n" + _zone.conn2Size + " people";
+					let _conn3Label = _zone.conn3Time + "\n" + _zone.conn3Size + " people";
+					let _conn4Label = _zone.conn4Time + "\n" + _zone.conn4Size + " people";
+					let _conn5Label = _zone.conn5Time + "\n" + _zone.conn5Size + " people";
+					let _conn6Label = _zone.conn6Time + "\n" + _zone.conn6Size + " people";
+					let _conn7Label = _zone.conn7Time + "\n" + _zone.conn7Size + " people";
+
+					let _node = _g.addNode(_zone.name, {label: _zone.name});
+					if (_zone.conn1Name != "" && _zone.conn1Name != null) var _conn1 = _g.addNode(_zone.conn1Name, {label: _zone.conn1Name});
+					if (_zone.conn2Name != "" && _zone.conn2Name != null) var _conn2 = _g.addNode(_zone.conn2Name, {label: _zone.conn2Name});
+					if (_zone.conn3Name != "" && _zone.conn3Name != null) var _conn3 = _g.addNode(_zone.conn3Name, {label: _zone.conn3Name});
+					if (_zone.conn4Name != "" && _zone.conn4Name != null) var _conn4 = _g.addNode(_zone.conn4Name, {label: _zone.conn4Name});
+					if (_zone.conn5Name != "" && _zone.conn5Name != null) var _conn5 = _g.addNode(_zone.conn5Name, {label: _zone.conn5Name});
+					if (_zone.conn6Name != "" && _zone.conn6Name != null) var _conn6 = _g.addNode(_zone.conn6Name, {label: _zone.conn6Name});
+					if (_zone.conn7Name != "" && _zone.conn7Name != null) var _conn7 = _g.addNode(_zone.conn7Name, {label: _zone.conn7Name});
+
+					if (_zone.conn1Name != "" && _zone.conn1Name != null) _g.addEdge(_node, _conn1, {style: {label: _conn1Label}});
+					if (_zone.conn2Name != "" && _zone.conn2Name != null) _g.addEdge(_node, _conn2, {style: {label: _conn2Label}});
+					if (_zone.conn3Name != "" && _zone.conn3Name != null) _g.addEdge(_node, _conn3, {style: {label: _conn3Label}});
+					if (_zone.conn4Name != "" && _zone.conn4Name != null) _g.addEdge(_node, _conn4, {style: {label: _conn4Label}});
+					if (_zone.conn5Name != "" && _zone.conn5Name != null) _g.addEdge(_node, _conn5, {style: {label: _conn5Label}});
+					if (_zone.conn6Name != "" && _zone.conn6Name != null) _g.addEdge(_node, _conn6, {style: {label: _conn6Label}});
+					if (_zone.conn7Name != "" && _zone.conn7Name != null) _g.addEdge(_node, _conn7, {style: {label: _conn7Label}});
+				}
+
+				var _layouter = new Dracula.Layout.Spring(_g);
+				_layouter.layout();
+				
+				var _renderer = new Dracula.Renderer.Raphael(_canvas, _g, 600, 600);
+				_renderer.draw();		
+				
+				var _textContainers = _canvas.querySelectorAll("tspan");
+				for(let _textObject in _textContainers) {
+					let _text = _textContainers[_textObject];
+					if(_text.textContent !== Number) {
+						_text.onclick = function () {
+							alert("Show edit modal here");
+						};
+					}
+				}
+			}
+
+			$(document).ready(function() {
+				getZones();		
+			});
+		</script>
+	</head>
+	<body>	
+		<div id="canvas"></div>
+	</body>
+</html>

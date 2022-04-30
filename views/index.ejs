@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<head>
+	<title> PortalMap </title>
+	
+	<link rel="stylesheet" type="text/css" href="/css/index.css">
+
+	<script type="text/javascript" src="/js/jquery.js"></script>
+	<script type="text/javascript" src="/js/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="/js/raphael.js"></script>
+	<script type="text/javascript" src="/js/dracula.min.js"></script>
+	<script type="text/javascript" src="/js/map.js"></script>
+</head>
+<body>	
+	<div id="dimmer"></div>
+
+	<div class="header">
+		<p id="headertext"> This is very incomplete <p>
+	</div>
+
+	<h1 id="title"> PortalMap </h1>
+
+	<div class="navigator">
+		<button onclick="editModal(true);"> Add Zone </button>
+	</div>
+
+	<p style="color: white"> Status: <%= statusmessage %> </p>
+	
+	<div id="canvas" height="500px"></div>	
+
+	<div id="editModal" class="modal">
+		<div class="modal-contents">
+			<form id="zoneInfo" action="/add" method="post" class=main>
+				<div class="gap"></div>
+
+				<label for="name"> Name </label>
+				<input type="text" id="name" name="name">
+				
+				<div class="gap"></div>
+				
+				<label for="conn1"> First Connection </label>
+				<input type="text" id="conn1" name="conn1">	
+				<label for="conn1time"> Lifetime </label>
+				<input type="text" id="conn1time" name="conn1time">
+				<label for="conn1size"> Size </label>
+				<input type="text" id="conn1size" name="conn1size">
+				
+				<div class="gap"></div>
+				
+				<label for="conn2"> Second Connection </label>
+				<input type="text" id="conn2" name="conn2">	
+				<label for="conn2time"> Lifetime </label>
+				<input type="text" id="conn2time" name="conn2time">	
+				<label for="conn2size"> Size </label>
+				<input type="text" id="conn2size" name="conn2size">
+
+				<div class="gap"></div>
+				
+				<label for="conn3"> Third Connection </label>
+				<input type="text" id="conn3" name="conn3">	
+				<label for="conn3time"> Lifetime </label>
+				<input type="text" id="conn3time" name="conn3time">	
+				<label for="conn3size"> Size </label>
+				<input type="text" id="conn3size" name="conn3size">
+				
+				<div class="gap"></div>
+
+				<label for="conn4"> Fourth Connection </label>
+				<input type="text" id="conn4" name="conn4">	
+				<label for="conn4time"> Lifetime </label>
+				<input type="text" id="conn4time" name="conn4time">	
+				<label for="conn4size"> Size </label>
+				<input type="text" id="conn4size" name="conn4size">
+
+				<div class="gap"></div>
+	
+				<label for="conn5"> Fifth Connection </label>
+				<input type="text" id="conn5" name="conn5">	
+				<label for="conn5time"> Lifetime </label>
+				<input type="text" id="conn5time" name="conn5time">	
+				<label for="conn5size"> Size </label>
+				<input type="text" id="conn5size" name="conn5size">
+
+				<div class="gap"></div>
+	
+				<label for="conn6"> Sixth Connection </label>
+				<input type="text" id="conn6" name="conn6">	
+				<label for="conn6time"> Lifetime </label>
+				<input type="text" id="conn6time" name="conn6time">	
+				<label for="conn6size"> Size </label>
+				<input type="text" id="conn6size" name="conn6size">
+
+				<div class="gap"></div>
+	
+				<label for="conn7"> Seventh Connection </label>
+				<input type="text" id="conn7" name="conn7">	
+				<label for="conn7time"> Lifetime </label>
+				<input type="text" id="conn7time" name="conn7time">	
+				<label for="conn7size"> Size </label>
+				<input type="text" id="conn7size" name="conn7size">
+
+				<div class="gap"></div>
+
+				<button id="cancel" value="Cancel" onclick="hideEditModal(); event.preventDefault();"> Cancel </button>
+				<button id="delete" value="Delete" onclick="deleteZone(); event.preventDefault(); hideEditModal();"> Delete </button>
+				<input id="submit" type="submit" value="submit" onclick="hideEditModal()">
+
+				<div class="gap"></div>
+			</form>
+		</div>
+	</div>
+
+	<div class="footer">
+		<p> Made by Isometrc for EQMS EQMS </p>
+	</div>
+</body>
