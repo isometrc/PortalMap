@@ -75,6 +75,11 @@ head {
 	width: 45%;
 }
 
+.timepicker {
+	flex: 45%;
+	width: 45%;
+}
+
 .main input[type="submit"] {
 	flex: 33%;
 	width: 33%;

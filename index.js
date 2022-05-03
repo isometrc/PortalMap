@@ -59,7 +59,8 @@ var con = mysql.createConnection ({
 	host: "127.0.0.1",
 	user: "mapadmin",
 	password: "im the administrator",
-	database: "PortalMap"
+	database: "PortalMap",
+	multipleStatements: true
 });
 
 con.connect((err) => {
@@ -128,17 +129,17 @@ function insertZone(zone, client)
 			if (_err) throw _err;
 	
 			let _connectionsString = "";
-			if(zone.conn1 !== null && _res.find((_element) => {return _element.Name == zone.conn1Name}) == undefined) _connectionsString += "(" + zone.conn1 + "),";
-			if(zone.conn2 !== null && _res.find((_element) => {return _element.Name == zone.conn2Name}) == undefined) _connectionsString += "(" + zone.conn2 + "),";
-			if(zone.conn3 !== null && _res.find((_element) => {return _element.Name == zone.conn3Name}) == undefined) _connectionsString += "(" + zone.conn3 + "),";
-			if(zone.conn4 !== null && _res.find((_element) => {return _element.Name == zone.conn4Name}) == undefined) _connectionsString += "(" + zone.conn4 + "),";
-			if(zone.conn5 !== null && _res.find((_element) => {return _element.Name == zone.conn5Name}) == undefined) _connectionsString += "(" + zone.conn5 + "),";
-			if(zone.conn6 !== null && _res.find((_element) => {return _element.Name == zone.conn6Name}) == undefined) _connectionsString += "(" + zone.conn6 + "),";
-			if(zone.conn7 !== null && _res.find((_element) => {return _element.Name == zone.conn7Name}) == undefined) _connectionsString += "(" + zone.conn7 + "),";			 
+			if(zone.conn1 !== null && _res.find((_element) => {return _element.Name == zone.conn1Name}) == undefined) _connectionsString += "(" + zone.conn1 + ", " + zone.name + ", " + zone.conn1time + ", " + zone.conn1size + "),";
+			if(zone.conn2 !== null && _res.find((_element) => {return _element.Name == zone.conn2Name}) == undefined) _connectionsString += "(" + zone.conn2 + ", " + zone.name + ", " + zone.conn2time + ", " + zone.conn2size + "),";
+			if(zone.conn3 !== null && _res.find((_element) => {return _element.Name == zone.conn3Name}) == undefined) _connectionsString += "(" + zone.conn3 + ", " + zone.name + ", " + zone.conn3time + ", " + zone.conn3size + "),";
+			if(zone.conn4 !== null && _res.find((_element) => {return _element.Name == zone.conn4Name}) == undefined) _connectionsString += "(" + zone.conn4 + ", " + zone.name + ", " + zone.conn4time + ", " + zone.conn4size + "),";
+			if(zone.conn5 !== null && _res.find((_element) => {return _element.Name == zone.conn5Name}) == undefined) _connectionsString += "(" + zone.conn5 + ", " + zone.name + ", " + zone.conn5time + ", " + zone.conn5size + "),";
+			if(zone.conn6 !== null && _res.find((_element) => {return _element.Name == zone.conn6Name}) == undefined) _connectionsString += "(" + zone.conn6 + ", " + zone.name + ", " + zone.conn6time + ", " + zone.conn6size + "),";
+			if(zone.conn7 !== null && _res.find((_element) => {return _element.Name == zone.conn7Name}) == undefined) _connectionsString += "(" + zone.conn7 + ", " + zone.name + ", " + zone.conn7time + ", " + zone.conn7size + "),";			 
 			
 			_connectionsString = _connectionsString.slice(0, -1);
 			if(_connectionsString.length != 0) {
-				_query = "INSERT INTO zones(Name) VALUES" + _connectionsString + ";";
+				_query = "INSERT INTO zones(Name, Conn1Name, Conn1Time, Conn1Size) VALUES" + _connectionsString + ";";
 
 				con.query(_query, (__err, __res) => {
 					if(__err && __err.code != "ER_DUP_ENTRY") throw __err;
@@ -154,6 +155,8 @@ function insertZone(zone, client)
 				});
 				updateZones();
 			}
+
+			// TODO: For each of the connection names, attempt to update their connection name, time and size to match the input
 		 });
 	}); 
 }
@@ -198,42 +201,24 @@ function editZone(zone, response) {
 	});
 }
 
-// JUST LOOK AT IT ITS AMAZING WOW i dont understand async
 function deleteZone(name, response) {
-	_query = "DELETE FROM zones WHERE Name='" + name + "';";
-	con.query(_query, (err, res) => {
-		if (err) throw err;
-		_query = "UPDATE zones SET Conn1Name=NULL, Conn1Time=Null, Conn1Size=NULL WHERE Conn1Name='" + name + "';";
-		con.query(_query, (err2, res2) => {
-			if(err2) throw err2;
-			_query = "UPDATE zones SET Conn2Name=NULL, Conn2Time=Null, Conn2Size=NULL WHERE Conn2Name='" + name + "';";
-			con.query(_query, (err3, res3) => {
-				if(err3) throw err3;
-				_query = "UPDATE zones SET Conn3Name=NULL, Conn3Time=Null, Conn3Size=NULL WHERE Conn3Name='" + name + "';";
-				con.query(_query, (err4, res4) => {
-					if(err4) throw err4;
-					_query = "UPDATE zones SET Conn4Name=NULL, Conn4Time=Null, Conn4Size=NULL WHERE Conn4Name='" + name + "';";
-					con.query(_query, (err5, res5) => {
-						if(err5) throw err5;
-						_query = "UPDATE zones SET Conn5Name=NULL, Conn5Time=Null, Conn5Size=NULL WHERE Conn5Name='" + name + "';";
-						con.query(_query, (err6, res6) => {
-							if(err6) throw err6;
-							_query = "UPDATE zones SET Conn6Name=NULL, Conn6Time=Null, Conn6Size=NULL WHERE Conn6Name='" + name + "';";
-							con.query(_query, (err7, res7) => {
-								if(err7) throw err7;	
-								_query = "UPDATE zones SET Conn7Name=NULL, Conn7Time=Null, Conn7Size=NULL WHERE Conn7Name='" + name + "';";
-								con.query(_query, (err8, res8) => {
-									if(err8) throw err8;
-									updateZones(); //TODO somehow send the response after this is done
-									response.send("success");
-								});
-							});
-						});
-					});
-				});
-			});
+	let _query = "DELETE FROM zones WHERE Name='" + name + "';";
+	con.query(_query, (err, res) => {	
+		if(err) throw err;
+		_query = "UPDATE zones SET Conn1Name=Null, Conn1Time=Null, Conn1Size=Null WHERE Conn1Name='" + name + "';";
+		_query += "UPDATE zones SET Conn2Name=Null, Conn2Time=Null, Conn2Size=Null WHERE Conn2Name='" + name + "';";
+		_query += "UPDATE zones SET Conn3Name=Null, Conn3Time=Null, Conn3Size=Null WHERE Conn3Name='" + name + "';";
+		_query += "UPDATE zones SET Conn4Name=Null, Conn4Time=Null, Conn4Size=Null WHERE Conn4Name='" + name + "';";
+		_query += "UPDATE zones SET Conn5Name=Null, Conn5Time=Null, Conn5Size=Null WHERE Conn5Name='" + name + "';";
+		_query += "UPDATE zones SET Conn6Name=Null, Conn6Time=Null, Conn6Size=Null WHERE Conn6Name='" + name + "';";
+		_query += "UPDATE zones SET Conn7Name=Null, Conn7Time=Null, Conn7Size=Null WHERE Conn7Name='" + name + "';";
+
+		con.query(_query, (_err, _res) => {
+			if(_err) throw _err;
+			updateZones(response);
 		});
 	});
+	// TODO: Fix the error with the graph not reloading properly when deletion occurs and the zone is updated
 }
 
 function updateZones(response) {

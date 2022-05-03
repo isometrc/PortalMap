@@ -8,6 +8,12 @@ function deleteZone() {
 }
 
 function editModal(add, zoneInfo) {
+	// Setup timepicker
+	$(".timepicker").timepicker({
+		timeFormat: "hh:mm:ss",
+		startTime: "00:00:00"
+	});
+
 	// Show the edit modal and fill in the text if the information is not empty
 	$("#name").val("");
 	$("#conn1").val("");
