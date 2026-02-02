@@ -25,6 +25,8 @@ The database needs a 'zones' table, comprising of the following fields:
 
 ### To start:
 * Change database credentials or port to your liking.
-* node index.js (port 8080 by default).
+```
+$ node index.js
+```
 
-![edit](https://files.catbox.moe/e6x0va.png "edit") 
+![edit](https://files.catbox.moe/ewbzk8.png "edit") 
